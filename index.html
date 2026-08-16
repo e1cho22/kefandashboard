@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>光明胜安居科凡门店 · 经营仪表盘</title>
+<style>
+  :root{
+    --bg:#f4f4f6; --card:#ffffff; --ink:#1a1a1a; --sub:#6b6b6b;
+    --line:#e8e8ec; --brand:#b91c1c; --brand2:#991b1b; --good:#b91c1c; --bad:#374151;
+    --warn:#b45309; --gold:#c9a23e; --shadow:0 6px 24px rgba(0,0,0,.08); --radius:16px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  body{font-family:-apple-system,"PingFang SC","Microsoft YaHei",Segoe UI,sans-serif;
+    background:var(--bg);color:var(--ink);line-height:1.5;max-width:480px;margin:0 auto;
+    padding-bottom:28px;overflow-x:hidden}
+
+  /* ===== Header banner ===== */
+  header{background:linear-gradient(135deg,#1c1c1e 0%,#2d2d30 55%,#3a3a3e 100%);
+    padding:18px 18px 44px;color:#fff;position:relative;overflow:hidden}
+  header::before{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;
+    background:linear-gradient(90deg,var(--brand),#ef4444)}
+  header::after{content:"";position:absolute;right:-50px;top:-60px;width:220px;height:220px;
+    background:radial-gradient(circle,rgba(255,255,255,.06),transparent 70%);border-radius:50%}
+  .brand{display:flex;align-items:center;gap:12px;position:relative;z-index:1}
+  .logo{width:50px;height:50px;border-radius:14px;background:#fff;display:flex;align-items:center;
+    justify-content:center;flex-shrink:0;box-shadow:0 4px 12px rgba(0,0,0,.25);padding:5px}
+  .logo img{width:100%;height:100%;object-fit:contain;border-radius:8px}
+  .brand .name{font-size:18px;font-weight:800;letter-spacing:.5px;line-height:1.2}
+  .brand .tag{display:inline-flex;align-items:center;gap:4px;font-size:10.5px;font-weight:600;
+    letter-spacing:1px;text-transform:uppercase;opacity:.75;margin-top:5px}
+  .tag .dot{width:5px;height:5px;border-radius:50%;background:#ef4444;box-shadow:0 0 0 3px rgba(239,68,68,.3)}
+  .sub{margin-top:9px;font-size:12px;opacity:.8;position:relative;z-index:1}
+
+  /* ===== Hero balance card ===== */
+  .hero{background:var(--card);border-radius:var(--radius);margin:-32px 14px 0;padding:18px 18px 16px;
+    box-shadow:var(--shadow);position:relative;z-index:2;border-top:3px solid var(--brand)}
+  .hero .lab{font-size:13px;color:var(--sub);display:flex;align-items:center;gap:6px}
+  .hero .lab .ic{width:16px;height:16px;color:var(--brand)}
+  .hero .big{font-size:36px;font-weight:800;letter-spacing:.5px;margin-top:6px;color:var(--brand);
+    font-variant-numeric:tabular-nums}
+  .hero .eq{font-size:11.5px;color:var(--sub);margin-top:8px;line-height:1.6;background:#f9f9fb;
+    padding:8px 10px;border-radius:10px}
+  .hero .eq b{color:var(--ink)}
+  .chips{display:flex;gap:9px;margin-top:14px}
+  .chip{flex:1;background:#f9f9fb;border-radius:11px;padding:10px 8px;text-align:center;
+    border:1px solid var(--line)}
+  .chip .t{font-size:11px;color:var(--sub)}
+  .chip .v{font-size:14px;font-weight:800;margin-top:4px;font-variant-numeric:tabular-nums}
+  .chip.in .v{color:var(--brand)} .chip.out .v{color:var(--bad)} .chip.net .v{color:var(--ink)}
+
+  /* ===== Sections ===== */
+  .sec-title{font-size:14px;font-weight:700;margin:22px 16px 10px;display:flex;align-items:center;gap:7px;color:var(--ink)}
+  .sec-title::before{content:"";width:4px;height:15px;background:linear-gradient(var(--brand),#ef4444);border-radius:3px}
+  .panel{background:var(--card);border-radius:var(--radius);padding:15px;box-shadow:var(--shadow);margin:0 14px 12px}
+
+  .kpis{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:0 14px}
+  .kpi{background:var(--card);border-radius:13px;padding:13px 13px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+  .kpi::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:3px 0 0 3px;background:var(--brand)}
+  .kpi.good::before{background:var(--good)} .kpi.bad::before{background:var(--bad)}
+  .kpi.brand::before{background:var(--brand2)} .kpi.warn::before{background:var(--warn)}
+  .kpi .lab{font-size:12px;color:var(--sub)}
+  .kpi .val{font-size:21px;font-weight:800;margin-top:5px;font-variant-numeric:tabular-nums;word-break:break-all}
+  .kpi .note{font-size:10.5px;color:var(--sub);margin-top:4px;line-height:1.4}
+  .kpi.good .val{color:var(--good)} .kpi.bad .val{color:var(--bad)}
+  .kpi.brand .val{color:var(--brand2)} .kpi.warn .val{color:var(--warn)}
+
+  /* monthly bars */
+  .mbar{display:flex;align-items:flex-end;gap:18px;height:168px;padding:0 4px;border-bottom:1px solid var(--line)}
+  .mcol{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
+  .mstack{display:flex;align-items:flex-end;gap:5px;height:100%}
+  .bar{width:26px;border-radius:6px 6px 0 0}
+  .bar.in{background:linear-gradient(#ef4444,#b91c1c)} .bar.out{background:linear-gradient(#4b5563,#374151)}
+  .mlab{font-size:11px;color:var(--sub);margin-top:7px}
+  .mnet{font-size:11px;font-weight:800;margin-top:2px}
+  .legend{display:flex;gap:14px;margin-top:10px;font-size:11px;color:var(--sub);flex-wrap:wrap}
+  .legend i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:5px;vertical-align:middle}
+
+  /* doughnut */
+  .donut{width:150px;height:150px;border-radius:50%;margin:6px auto 8px;position:relative;
+    box-shadow:0 4px 14px rgba(0,0,0,.08)}
+  .donut::after{content:"";position:absolute;inset:30px;background:var(--card);border-radius:50%;
+    box-shadow:inset 0 2px 6px rgba(0,0,0,.05)}
+  .dlist{font-size:12.5px}
+  .dlist .row{display:flex;justify-content:space-between;padding:6px 2px;border-bottom:1px dashed var(--line)}
+  .dlist .row:last-child{border:0;font-weight:700}
+  .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px}
+
+  /* order bars */
+  .obar{margin:10px 0}
+  .obar .top{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px}
+  .otrack{height:13px;background:var(--line);border-radius:8px;overflow:hidden}
+  .ofill{height:100%;background:linear-gradient(90deg,var(--brand),#ef4444);border-radius:8px}
+
+  /* table */
+  .tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:var(--radius);
+    box-shadow:var(--shadow);background:var(--card);margin:0 14px}
+  table{width:100%;border-collapse:collapse;font-size:12px;min-width:560px}
+  th,td{padding:10px 10px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+  th:first-child,td:first-child,th:nth-child(2),td:nth-child(2){text-align:left}
+  thead th{background:#f4f4f6;color:var(--sub);font-weight:700;position:sticky;top:0}
+  tbody tr:last-child td{border:0}
+  .tag{display:inline-block;padding:2px 8px;border-radius:20px;font-size:11px}
+  .tag.done{background:#fef2f2;color:var(--brand)} .tag.prod{background:#f9f9fb;color:var(--ink);border:1px solid var(--line)}
+  .tag.wait{background:#fffbeb;color:var(--warn)}
+  .neg{color:var(--bad)} .pos{color:var(--good)}
+  .hint{font-size:11px;color:var(--sub);margin:6px 16px 0;text-align:center}
+
+  footer{color:var(--sub);font-size:11px;margin:18px 16px 0;line-height:1.7}
+  footer b{color:var(--ink)}
+  .foot-brand{display:flex;align-items:center;gap:8px;margin-bottom:8px;color:var(--ink);font-weight:700;font-size:12px}
+  .foot-brand img{width:18px;height:18px;object-fit:contain}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="logo"><img src="./logo-kefan.png" alt="科凡高定"></div>
+    <div>
+      <div class="name">光明胜安居科凡门店</div>
+      <div class="tag"><span class="dot"></span>KEFAN · 科凡高定 · 全屋定制</div>
+    </div>
+  </div>
+  <div class="sub" id="headerSub">数据快照：2026-08-12 · 门店经营仪表盘</div>
+</header>
+
+<div class="hero">
+  <div class="lab">
+    <svg class="ic" viewBox="0 0 24 24" fill="none"><path d="M3 10h18M5 10V7a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v3m-16 0v9a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-9M9 14h6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    账户现有余额
+  </div>
+  <div class="big" id="heroBalance">¥0</div>
+  <div class="eq">本金 <b id="eqP">¥100,000</b> ＋ 累计收入 <b id="eqI">¥0</b> － 累计支出 <b id="eqE">¥0</b></div>
+  <div class="chips">
+    <div class="chip in"><div class="t">累计收入</div><div class="v" id="chipI">¥0</div></div>
+    <div class="chip out"><div class="t">累计支出</div><div class="v" id="chipE">¥0</div></div>
+    <div class="chip net"><div class="t">累计净利</div><div class="v" id="chipN">¥0</div></div>
+  </div>
+</div>
+
+<div class="sec-title">核心指标</div>
+<div class="kpis" id="kpis"></div>
+
+<div class="panel" style="margin-top:14px">
+  <h3 style="font-size:13.5px;margin-bottom:12px;font-weight:700">月度收支与净利</h3>
+  <div class="mbar" id="mbar"></div>
+  <div class="legend">
+    <span><i style="background:linear-gradient(#ef4444,#b91c1c)"></i>月收入</span>
+    <span><i style="background:linear-gradient(#4b5563,#374151)"></i>月支出</span>
+    <span><i style="background:var(--brand)"></i>月净利</span>
+  </div>
+</div>
+
+<div class="panel">
+  <h3 style="font-size:13.5px;margin-bottom:12px;font-weight:700">支出科目构成</h3>
+  <div class="donut" id="donut"></div>
+  <div class="dlist" id="dlist"></div>
+</div>
+
+<div class="panel">
+  <h3 style="font-size:13.5px;margin-bottom:12px;font-weight:700">各订单利润率（利润结余）</h3>
+  <div id="orderBars"></div>
+</div>
+
+<div class="sec-title">订单明细</div>
+<div class="tscroll">
+<table>
+  <thead><tr><th>订单号</th><th>客户</th><th>合同额</th><th>实收</th><th>回款率</th><th>利润结余</th><th>欠款/预收</th><th>状态</th></tr></thead>
+  <tbody id="otbody"></tbody>
+</table>
+</div>
+<div class="hint">← 左右滑动查看完整表格 →</div>
+
+<footer>
+  <div class="foot-brand">
+    <img src="./logo-kefan.png" alt="科凡高定">科凡高定 · 全屋定制 · 光明胜安居店
+  </div>
+  <b>指标口径说明</b>
+  <div id="footNotes"></div>
+</footer>
+
+<script>
+const D = {
+  date:"2026-08-16",
+  balance:45079, income:61322, expense:116243.03, net:-54921,
+  principal:100000, contract:32050, unreceived:0, prepaid:16000,
+  orderProfitRate:41.9, collectRate:149.9, orderCount:4, avgPrice:8012.5, txn:39,
+  months:[{m:"2026-07",in:43050,out:92093,net:-49043},{m:"2026-08",in:18272,out:24150,net:-5878}],
+  expenseCat:[
+    {n:"营销推广",v:55405,c:"#b91c1c"},
+    {n:"订单成本",v:28623,c:"#374151"},
+    {n:"人工支出",v:14294.03,c:"#4b5563"},
+    {n:"其他费用",v:14076,c:"#6b7280"},
+    {n:"房租水电",v:3845,c:"#111827"}
+  ],
+  orders:[
+    {no:"720260810",c:"刘先生",ct:17400,rc:17400,rate:100,pf:8249,d:0,s:"生产中",cls:"prod"},
+    {no:"820260810",c:"周小姐",ct:6150,rc:6150,rate:100,pf:1573,d:0,s:"已完成",cls:"done"},
+    {no:"920260810",c:"林小姐",ct:0,rc:10000,rate:null,pf:0,d:-10000,s:"设计中",cls:"wait"},
+    {no:"1020260810",c:"陈小姐",ct:0,rc:3000,rate:null,pf:0,d:-3000,s:"设计中",cls:"wait"},
+    {no:"1120260810",c:"陈总",ct:3800,rc:3800,rate:100,pf:920,d:0,s:"已完成",cls:"done"},
+    {no:"1220260810",c:"殷小飞",ct:4700,rc:4700,rate:100,pf:2685,d:0,s:"已完成",cls:"done"},
+    {no:"1320260810",c:"陈先生",ct:0,rc:3000,rate:null,pf:0,d:-3000,s:"设计中",cls:"wait"}
+  ]
+};
+const fmt = n => (n<0?"-":"") + "¥" + Math.abs(Math.round(n)).toLocaleString("zh-CN");
+const cls = n => n<0?"neg":"pos";
+
+/* header + hero */
+document.getElementById("headerSub").textContent = "数据快照：" + D.date + " · 门店经营仪表盘";
+document.getElementById("eqP").textContent = fmt(D.principal);
+document.getElementById("eqI").textContent = fmt(D.income);
+document.getElementById("eqE").textContent = fmt(D.expense);
+document.getElementById("chipI").textContent = fmt(D.income);
+document.getElementById("chipE").textContent = fmt(D.expense);
+document.getElementById("chipN").textContent = fmt(D.net);
+
+/* count-up animation for balance */
+(function(){
+  const el = document.getElementById("heroBalance");
+  const target = D.balance, dur = 900, t0 = performance.now();
+  function step(t){
+    const p = Math.min((t-t0)/dur,1);
+    const e = 1-Math.pow(1-p,3);
+    el.textContent = fmt(Math.round(target*e));
+    if(p<1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+})();
+
+/* derived text bits (all driven by D, no hard-coded numbers) */
+const totE = D.expenseCat.reduce((s,x)=>s+x.v,0);
+const topCat = D.expenseCat.slice().sort((a,b)=>b.v-a.v)[0] || {n:"—",v:0};
+const topCatPct = totE? (topCat.v/totE*100).toFixed(1) : "0.0";
+const prepaidOrders = D.orders.filter(o=>o.d<0).length;
+const owedOrders = D.orders.filter(o=>o.d>0);
+const owedNames = owedOrders.map(o=>o.c).join("、");
+
+const kpis = [
+  {lab:"账户现有余额",val:fmt(D.balance),
+   note:"本金"+fmt(D.principal)+"＋实收"+fmt(D.income)+"−实支"+fmt(D.expense),k:"good"},
+  {lab:"未收尾款",val:fmt(D.unreceived),
+   note:(D.unreceived>0? owedNames+"待收" : "尾款已全部结清")+(D.prepaid>0? "；另预收"+fmt(D.prepaid) : ""),k:"warn"},
+  {lab:"订单平均利润率",val:D.orderProfitRate+"%",note:"利润结余合计÷合同总额",k:"brand"},
+  {lab:"累计净利",val:fmt(D.net),note:"收入"+fmt(D.income)+"/支出"+fmt(D.expense),k:D.net<0?"bad":"good"},
+  {lab:"累计收入(实收)",val:fmt(D.income),note:"订单回款为主，含其他收入",k:""},
+  {lab:"累计支出(实付)",val:fmt(D.expense),note:topCat.n+"占 "+topCatPct+"%",k:""},
+  {lab:"整体回款率",val:D.collectRate+"%",
+   note:(D.collectRate>100? "预收定金拉高分母" : "按合同额口径"),k:D.collectRate>100?"warn":""},
+  {lab:"合同额/订单数",val:fmt(D.contract)+"/"+D.orderCount,note:"客单价"+fmt(D.avgPrice),k:""}
+];
+document.getElementById("kpis").innerHTML = kpis.map(k=>
+  `<div class="kpi ${k.k}"><div class="lab">${k.lab}</div><div class="val">${k.val}</div><div class="note">${k.note}</div></div>`).join("");
+
+const maxM = Math.max(...D.months.flatMap(x=>[x.in,x.out]),1);
+document.getElementById("mbar").innerHTML = D.months.map(x=>{
+  const hIn=Math.round(x.in/maxM*145), hOut=Math.round(x.out/maxM*145);
+  return `<div class="mcol"><div class="mstack">
+    <div class="bar in" style="height:${hIn}px"></div>
+    <div class="bar out" style="height:${hOut}px"></div></div>
+    <div class="mnet ${cls(x.net)}">${fmt(x.net)}</div>
+    <div class="mlab">${x.m}</div></div>`;
+}).join("");
+
+let acc=0, stops=[];
+D.expenseCat.forEach(x=>{const a0=acc/totE*360,a1=(acc+x.v)/totE*360;stops.push(`${x.c} ${a0}deg ${a1}deg`);acc+=x.v;});
+document.getElementById("donut").style.background=`conic-gradient(${stops.join(",")})`;
+document.getElementById("dlist").innerHTML = D.expenseCat.map(x=>
+  `<div class="row"><span><i class="dot" style="background:${x.c}"></i>${x.n}</span>
+   <span><b>${fmt(x.v)}</b> · ${(x.v/totE*100).toFixed(1)}%</span></div>`).join("")
+  + `<div class="row"><span>合计</span><span>${fmt(totE)}</span></div>`;
+
+const maxPf = Math.max(...D.orders.map(o=>o.pf));
+document.getElementById("orderBars").innerHTML = D.orders.map(o=>{
+  const w = maxPf? Math.round(o.pf/maxPf*100):0;
+  const rate = o.rate==null? "—" : o.rate+"%";
+  return `<div class="obar"><div class="top"><span>${o.c} <span style="color:var(--sub)">(${o.no})</span></span>
+    <span>利润 ${fmt(o.pf)} · 回款 ${rate}</span></div>
+    <div class="otrack"><div class="ofill" style="width:${w}%"></div></div></div>`;
+}).join("");
+
+document.getElementById("otbody").innerHTML = D.orders.map(o=>{
+  const dTxt = o.d===0? "0" : (o.d>0? `<span class="neg">欠款 ${fmt(o.d)}</span>` : `<span class="pos">预收 ${fmt(-o.d)}</span>`);
+  const rate = o.rate==null? "—" : o.rate+"%";
+  return `<tr><td>${o.no}</td><td>${o.c}</td><td>${fmt(o.ct)}</td><td>${fmt(o.rc)}</td>
+    <td>${rate}</td><td class="${o.pf<0?'neg':'pos'}">${fmt(o.pf)}</td><td>${dTxt}</td>
+    <td><span class="tag ${o.cls}">${o.s}</span></td></tr>`;
+}).join("");
+
+/* footer notes — fully derived from D */
+const notes = [
+  `账户现有余额 ＝ 本金 ${fmt(D.principal)} ＋ 累计收入 ${fmt(D.income)} － 累计支出 ${fmt(D.expense)}（含本金现金存量）。`,
+  D.unreceived>0
+    ? `未收尾款 ${fmt(D.unreceived)}（${owedNames}）；另预收定金 ${fmt(D.prepaid)}（${prepaidOrders} 笔已收定金、合同额待录）。`
+    : `未收尾款 ${fmt(D.unreceived)}，已成交订单尾款全部结清；另预收定金 ${fmt(D.prepaid)}（${prepaidOrders} 笔已收定金、合同额待录）。`,
+  `订单平均利润率 ≈ ${D.orderProfitRate}%（利润结余合计 ÷ 合同总额 ${fmt(D.contract)}）。` +
+    (D.net<0? "经营净利率为负，系开业初期营销与品牌方定金等前置投入尚未被回款覆盖。" : ""),
+  (D.collectRate>100
+    ? `整体回款率 ${D.collectRate}% 偏高，因 ${prepaidOrders} 笔预收定金（合同额为 0）拉低分母；录入正式合同额后回落。`
+    : `整体回款率 ${D.collectRate}%（实收合计 ÷ 合同总额）。`),
+  `本页为独立可视化快照，数据与主系统「门店经营多维表（运营+财务）」一致，每日 17:30 自动刷新（本次快照 ${D.date}，共 ${D.txn} 笔收支流水）。`
+];
+document.getElementById("footNotes").innerHTML = notes.map(t=>`· ${t}`).join("<br>");
+</script>
+</body>
+</html>
