@@ -185,11 +185,11 @@
 
 <script>
 const D = {
-  date:"2026-09-04",
+  date:"2026-09-11",
   balance:19829.97, income:63322, expense:143492.03, net:-80170.03,
-  principal:100000, contract:32050, unreceived:0, prepaid:16000,
-  orderProfitRate:41.9, collectRate:149.9, orderCount:4, avgPrice:8012.5, txn:48,
-  months:[{m:"2026-07",in:43050,out:93443,net:-50393},{m:"2026-08",in:20272,out:50049.03,net:-29777.03}],
+  principal:100000, contract:99394, unreceived:67344, prepaid:16000,
+  orderProfitRate:81.3, collectRate:48.3, orderCount:5, avgPrice:19878.8, txn:48,
+  months:[{m:"2026-07",in:43050,out:92093,net:-49043},{m:"2026-08",in:20272,out:51399.03,net:-31127.03}],
   expenseCat:[
     {n:"营销推广",v:55405,c:"#b91c1c"},
     {n:"订单成本",v:28623,c:"#374151"},
@@ -205,7 +205,8 @@ const D = {
     {no:"1020260810",c:"陈小姐",ct:0,rc:3000,rate:null,pf:-2200,d:-3000,s:"退单",cls:"refund"},
     {no:"1120260810",c:"陈总",ct:3800,rc:3800,rate:100,pf:920,d:0,s:"已完成",cls:"done"},
     {no:"1220260810",c:"殷小飞",ct:4700,rc:4700,rate:100,pf:2685,d:0,s:"已完成",cls:"done"},
-    {no:"1320260810",c:"陈先生",ct:0,rc:3000,rate:null,pf:0,d:-3000,s:"设计中",cls:"wait"}
+    {no:"1320260810",c:"陈先生",ct:0,rc:3000,rate:null,pf:0,d:-3000,s:"设计中",cls:"wait"},
+    {no:"1420260911",c:"麦小姐",ct:67344,rc:0,rate:0,pf:67344,d:67344,s:"设计中",cls:"wait"}
   ]
 };
 const fmt = n => (n<0?"-":"") + "¥" + Math.abs(Math.round(n)).toLocaleString("zh-CN");
